@@ -7,7 +7,7 @@ data = pd.read_csv("student_performance.csv")
 
 print("Original Dataset Shape:", data.shape)
 
-# 1. Remove duplicate records
+# 1. Remove duplicate recordsa
 data = data.drop_duplicates()
 
 # 2. Replace invalid attendance values with missing values
@@ -52,6 +52,13 @@ print("\nCleaned Dataset Shape:", data.shape)
 data.to_csv("cleaned_student_performance.csv", index=False)
 
 print("\nDataset cleaned and saved successfully!")
+
+print("\nFeature Value Ranges:")
+print(data[[
+    "Internal_Marks",
+    "Assignment_Score"
+]].describe())
+
 
 X = data[[
     "Attendance_Percentage",
@@ -183,6 +190,7 @@ for name, model in models.items():
 print("Best Parameters:", grid.best_params_)
 print("Best CV Macro F1:", grid.best_score_)
 
+
 # Select the best Decision Tree
 model = grid.best_estimator_
 
@@ -192,22 +200,16 @@ print(grid.best_params_)
 # Predict test data
 y_pred = model.predict(X_test)
 
+# Save the best model and encoder together
 import joblib
 
 joblib.dump(
     {
-        "model": model1,
+        "model": model,
         "encoder": encoder
     },
     "student_model.pkl"
 )
 
-print("Final model saved successfully!")
+print("\nFinal model saved successfully!")
 print("Features:", list(model.feature_names_in_))
-print("Final model saved successfully!")
-
-with open("student_model.pkl", "wb") as f:
-    pickle.dump(model, f)
-
-with open("encoder.pkl", "wb") as f:
-    pickle.dump(encoder, f)
